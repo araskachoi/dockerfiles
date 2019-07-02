@@ -7,7 +7,7 @@ RUN apt-get update &&\
     inetutils-tools wget ca-certificates curl build-essential libssl-dev golang-go make
 # builds out geth
 RUN git clone https://github.com/spapinistarkware/go-ethereum.git &&\
-	git checkout increase-tx-size-limit
+	git checkout increase-tx-size-limit &&\
         cd /go-ethereum &&\
         make all
 
