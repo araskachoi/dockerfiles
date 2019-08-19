@@ -1,7 +1,7 @@
 substitutions:
   _IMAGE: 'gcr.io/whiteblock/geth'
   _DIR: 'ethereum/geth'
-timeout: '90m'
+timeout: '20m'
 steps:
 # build final docker image
 - id: build
@@ -26,5 +26,5 @@ steps:
     - 'build'
 
 options:
-  machineType: 'N1_HIGHCPU_32'
+  machineType: 'N1_HIGHCPU_8'
 images: ['$_IMAGE:$BRANCH_NAME', '$_IMAGE:$COMMIT_SHA']
