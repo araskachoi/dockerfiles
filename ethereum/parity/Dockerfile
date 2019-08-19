@@ -1,44 +1,19 @@
-FROM rust:1.32.0-stretch as built
-  
+FROM ubuntu:18.04 as built
+
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install \
-    -y --no-install-recommends \
-    apt-utils iputils-ping expect git git-extras yasm curl \
-    software-properties-common tmux gcc libudev-dev pkg-config \
-    file make g++ \
-    wget ca-certificates cmake \
-    iperf3 openssh-server telnet iproute2 libssl-dev \
-    && apt-get clean
+RUN apt-get update && apt-get install -y --no-install-recommends git wget ca-certificates
 
-
-RUN git clone https://github.com/paritytech/parity-ethereum
-WORKDIR /parity-ethereum
-RUN git checkout v2.4.5
-RUN cargo clean && cargo build --release --features final
-
-#RUN apt-get install -y wget 
-#RUN wget https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.8.23-c9427004.tar.gz &&\
-#    tar xzf geth-linux-amd64-1.8.23-c9427004.tar.gz geth-linux-amd64-1.8.23-c9427004/ &&\
-#    mv geth-linux-amd64-1.8.23-c9427004/geth /usr/local/bin/
-
-
-#RUN echo "export PATH=\"/parity-ethereum/target/release:\${PATH}\"" >> /etc/profile
-#ENV PATH="/parity-ethereum/target/release:${PATH}"
-
-EXPOSE 8080 8545 8180
+RUN wget https://releases.parity.io/ethereum/v2.6.1/x86_64-unknown-linux-gnu/parity
+RUN mv ./parity /usr/local/bin/ && chmod +x /usr/local/bin/parity
 
 FROM ubuntu:18.04 as final
 
-RUN apt-get update && apt-get install -y vim iperf3 openssh-server telnet iproute2 libssl-dev iputils-ping tmux git \
-    python3.6 python3-pip python3-dev
-RUN apt-get update && apt-get install -f -y npm nodejs
+RUN apt-get update && apt-get install --no-install-recommends -y iperf3 openssh-server iputils-ping tmux &&\
+	apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN npm install && npm install -g pm2
-RUN pip3 install vyper
-
-COPY --from=built /parity-ethereum/target/release/parity /usr/local/bin/parity
+COPY --from=built /usr/local/bin/parity /usr/local/bin/parity
 WORKDIR /
-RUN git clone https://github.com/whiteblock/solc_resources.git
 
+EXPOSE 8080 8545 8180
 ENTRYPOINT ["/bin/bash"]
