@@ -17,7 +17,7 @@ FROM ubuntu:18.04 as final
 
 COPY --from=built /go-ethereum/build/bin/geth /usr/local/bin/geth
 
-RUN apt-get install -y iperf3 openssh-server iputils-ping tmux && apt-get clean
+RUN apt-get update && apt-get install -y iperf3 openssh-server iputils-ping tmux && apt-get clean
 
 WORKDIR /
 
