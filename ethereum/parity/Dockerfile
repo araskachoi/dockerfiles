@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends git wget ca-certificates
 
-RUN wget https://releases.parity.io/ethereum/v2.6.1/x86_64-unknown-linux-gnu/parity
+RUN wget https://releases.parity.io/ethereum/v2.6.5/x86_64-unknown-linux-gnu/parity
 RUN mv ./parity /usr/local/bin/ && chmod +x /usr/local/bin/parity
 
 FROM ubuntu:18.04 as final
