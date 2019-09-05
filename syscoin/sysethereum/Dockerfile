@@ -1,4 +1,6 @@
-FROM ubuntu:18.04
+FROM alpine:3.7
+
+RUN apk add --no-cache mysql-client
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential maven libsodium-dev \
